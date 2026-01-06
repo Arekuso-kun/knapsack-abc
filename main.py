@@ -1,3 +1,4 @@
+import os
 import random
 import time
 
@@ -315,10 +316,14 @@ def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history, size=
     )
 
     plt.tight_layout()
+
+    # Create results folder if it doesn't exist
+    os.makedirs("results", exist_ok=True)
+
     filename = (
-        f"knapsack_analysis_size_{size}.png"
+        f"results/knapsack_analysis_size_{size}.png"
         if size is not None
-        else "knapsack_analysis.png"
+        else "results/knapsack_analysis.png"
     )
     plt.savefig(filename, dpi=300, bbox_inches="tight")
     print(f"\nAnalysis graph saved as '{filename}'")
@@ -524,8 +529,12 @@ def plot_scaling_analysis(results):
     ax4.grid(True, alpha=0.3, which="both")
 
     plt.tight_layout()
-    plt.savefig("knapsack_scaling_analysis.png", dpi=300, bbox_inches="tight")
-    print("\nScaling analysis graph saved as 'knapsack_scaling_analysis.png'")
+
+    # Create results folder if it doesn't exist
+    os.makedirs("results", exist_ok=True)
+
+    plt.savefig("results/knapsack_scaling_analysis.png", dpi=300, bbox_inches="tight")
+    print("\nScaling analysis graph saved as 'results/knapsack_scaling_analysis.png'")
     plt.show()
 
 
