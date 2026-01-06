@@ -172,23 +172,24 @@ def print_solution(solution, items, capacity):
             print(f"  Item {i+1}: weight={items[i][0]}, value={items[i][1]}")
 
 
-def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history):
+def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history, size=None):
     """Create visualization of results"""
     fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-    fig.suptitle(
-        "Knapsack Problem: ABC vs Backtracking Analysis", fontsize=16, fontweight="bold"
-    )
+    title = f"Problema Rucsacului: Analiza ABC vs Backtracking"
+    if size is not None:
+        title += f" ({size} obiecte)"
+    fig.suptitle(title, fontsize=16, fontweight="bold")
 
     # 1. Time Comparison
     ax1 = axes[0, 0]
-    algorithms = ["ABC\n(Metaheuristic)", "Backtracking\n(Exact)"]
+    algorithms = ["ABC\n(Metaeuristic)", "Backtracking\n(Exact)"]
     times = [abc_time, bt_time]
     colors = ["#2ecc71", "#e74c3c"]
     bars = ax1.bar(
         algorithms, times, color=colors, alpha=0.7, edgecolor="black", linewidth=2
     )
-    ax1.set_ylabel("Time (seconds)", fontweight="bold", fontsize=11)
-    ax1.set_title("Execution Time Comparison", fontweight="bold", fontsize=12)
+    ax1.set_ylabel("Timp (secunde)", fontweight="bold", fontsize=11)
+    ax1.set_title("Comparație Timp de Execuție", fontweight="bold", fontsize=12)
     ax1.grid(axis="y", alpha=0.3)
 
     # Add value labels on bars
@@ -209,7 +210,7 @@ def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history):
     ax1.text(
         0.5,
         max(times) * 0.5,
-        f"ABC is {speedup:.1f}× faster!",
+        f"ABC este de {speedup:.1f}× mai rapid!",
         ha="center",
         fontsize=11,
         bbox=dict(boxstyle="round", facecolor="yellow", alpha=0.5),
@@ -217,14 +218,14 @@ def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history):
 
     # 2. Value Comparison
     ax2 = axes[0, 1]
-    algorithms = ["ABC", "Backtracking\n(Optimal)"]
+    algorithms = ["ABC", "Backtracking\n(Optim)"]
     values = [abc_val, bt_val]
     colors = ["#3498db", "#9b59b6"]
     bars = ax2.bar(
         algorithms, values, color=colors, alpha=0.7, edgecolor="black", linewidth=2
     )
-    ax2.set_ylabel("Total Value", fontweight="bold", fontsize=11)
-    ax2.set_title("Solution Quality Comparison", fontweight="bold", fontsize=12)
+    ax2.set_ylabel("Valoare Totală", fontweight="bold", fontsize=11)
+    ax2.set_title("Comparație Calitate Soluții", fontweight="bold", fontsize=12)
     ax2.grid(axis="y", alpha=0.3)
 
     # Add value labels
@@ -246,7 +247,7 @@ def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history):
     ax2.text(
         0.5,
         max(values) * 0.5,
-        f"Accuracy: {accuracy:.1f}%\nGap: {gap}",
+        f"Acuratețe: {accuracy:.1f}%\nDiferență: {gap}",
         ha="center",
         fontsize=11,
         bbox=dict(boxstyle="round", facecolor="lightblue", alpha=0.5),
@@ -263,14 +264,14 @@ def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history):
         marker="o",
         markersize=4,
         markevery=5,
-        label="Best Value",
+        label="Cea Mai Bună Valoare",
     )
     ax3.axhline(
-        y=bt_val, color="#9b59b6", linestyle="--", linewidth=2, label="Optimal Value"
+        y=bt_val, color="#9b59b6", linestyle="--", linewidth=2, label="Valoare Optimă"
     )
-    ax3.set_xlabel("Iteration", fontweight="bold", fontsize=11)
-    ax3.set_ylabel("Best Value Found", fontweight="bold", fontsize=11)
-    ax3.set_title("ABC Convergence Over Time", fontweight="bold", fontsize=12)
+    ax3.set_xlabel("Iterație", fontweight="bold", fontsize=11)
+    ax3.set_ylabel("Cea Mai Bună Valoare Găsită", fontweight="bold", fontsize=11)
+    ax3.set_title("Convergența ABC în Timp", fontweight="bold", fontsize=12)
     ax3.grid(True, alpha=0.3)
     ax3.legend(loc="lower right", fontsize=10)
     ax3.fill_between(iterations, convergence_history, alpha=0.3, color="#e67e22")
@@ -280,27 +281,27 @@ def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history):
     ax4.axis("off")
 
     metrics_text = f"""
-    PERFORMANCE METRICS
+    METRICI DE PERFORMANȚĂ
     {'='*40}
     
-    Artificial Bee Colony (ABC):
-       • Time: {abc_time:.6f} seconds
-       • Value: {abc_val}
-       • Type: Metaheuristic (Approximate)
+    Colonie Artificială de Albine (ABC):
+       • Timp: {abc_time:.6f} secunde
+       • Valoare: {abc_val}
+       • Tip: Metaeuristic (Aproximativ)
     
     Backtracking (Branch & Bound):
-       • Time: {bt_time:.6f} seconds
-       • Value: {bt_val} (OPTIMAL)
-       • Type: Exact Algorithm
+       • Timp: {bt_time:.6f} secunde
+       • Valoare: {bt_val} (OPTIM)
+       • Tip: Algoritm Exact
     
-    Comparison:
-       • Speed Ratio: {speedup:.2f}x faster (ABC)
-       • Accuracy: {accuracy:.2f}%
-       • Value Gap: {gap}
+    Comparație:
+       • Raport Viteză: {speedup:.2f}x mai rapid (ABC)
+       • Acuratețe: {accuracy:.2f}%
+       • Diferență Valoare: {gap}
     
-    Conclusion:
-       ABC found {accuracy:.1f}% optimal solution
-       in just {(abc_time/bt_time*100):.2f}% of the time!
+    Concluzie:
+       ABC a găsit o soluție {accuracy:.1f}% optimă
+       în doar {(abc_time/bt_time*100):.2f}% din timp!
     """
 
     ax4.text(
@@ -314,9 +315,14 @@ def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history):
     )
 
     plt.tight_layout()
-    plt.savefig("knapsack_analysis.png", dpi=300, bbox_inches="tight")
-    print("\nAnalysis graph saved as 'knapsack_analysis.png'")
-    plt.show()
+    filename = (
+        f"knapsack_analysis_size_{size}.png"
+        if size is not None
+        else "knapsack_analysis.png"
+    )
+    plt.savefig(filename, dpi=300, bbox_inches="tight")
+    print(f"\nAnalysis graph saved as '{filename}'")
+    plt.close()  # Close to avoid showing multiple windows
 
 
 # ============================================================
@@ -324,73 +330,207 @@ def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history):
 # ============================================================
 
 
+def generate_random_items(n_items, max_weight=50, max_value=100):
+    """Generate random knapsack items"""
+    items = []
+    for _ in range(n_items):
+        weight = random.randint(5, max_weight)
+        value = random.randint(20, max_value)
+        items.append((weight, value))
+    # Set capacity to ~50% of total weight
+    total_weight = sum(w for w, v in items)
+    capacity = total_weight // 2
+    return items, capacity
+
+
+def test_multiple_sizes():
+    """Test both algorithms on multiple problem sizes"""
+    print("\n" + "=" * 80)
+    print("MULTI-SIZE PERFORMANCE TEST: ABC vs BACKTRACKING")
+    print("=" * 80)
+
+    test_sizes = [10, 15, 20, 25, 30, 35]
+    results = []
+
+    for size in test_sizes:
+        print(f"\n{'='*80}")
+        print(f"TEST: {size} ITEMS")
+        print(f"{'='*80}")
+
+        # Generate problem
+        items, capacity = generate_random_items(size)
+        print(f"Generated {size} items, capacity = {capacity}")
+
+        # Test ABC
+        print(f"\nRunning ABC...")
+        abc_sol, abc_val, abc_time, convergence = abc_knapsack(
+            items, capacity, bees=30, iterations=100
+        )
+
+        # Test Backtracking
+        print(f"\nRunning Backtracking...")
+        bt_sol, bt_val, bt_time = backtracking_knapsack(items, capacity)
+        accuracy = (abc_val / bt_val * 100) if bt_val > 0 else 0
+        speedup = bt_time / abc_time if abc_time > 0 else 0
+
+        results.append(
+            {
+                "size": size,
+                "abc_val": abc_val,
+                "abc_time": abc_time,
+                "bt_val": bt_val,
+                "bt_time": bt_time,
+                "accuracy": accuracy,
+                "speedup": speedup,
+            }
+        )
+
+        # Print comparison
+        print(f"\n{'-'*80}")
+        print(f"SIZE {size} RESULTS:")
+        print(f"  ABC: value={abc_val}, time={abc_time:.6f}s")
+        if bt_val is not None:
+            print(f"  Backtracking: value={bt_val}, time={bt_time:.6f}s")
+            print(f"  Accuracy: {accuracy:.2f}%")
+            print(f"  Speedup: {speedup:.2f}x")
+
+            # Generate detailed analysis for this size
+            print(f"\nGenerating detailed analysis graph for size {size}...")
+            plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence, size)
+        print(f"{'-'*80}")
+
+    # Summary table
+    print(f"\n{'='*80}")
+    print("SUMMARY TABLE")
+    print(f"{'='*80}")
+    print(
+        f"{'Size':<8} {'ABC Value':<12} {'ABC Time':<12} {'BT Value':<12} {'BT Time':<12} {'Accuracy':<12} {'Speedup'}"
+    )
+    print(f"{'-'*80}")
+
+    for r in results:
+        bt_val_str = str(r["bt_val"]) if r["bt_val"] is not None else "N/A"
+        bt_time_str = f"{r['bt_time']:.4f}s" if r["bt_time"] is not None else "N/A"
+        acc_str = f"{r['accuracy']:.2f}%" if r["accuracy"] is not None else "N/A"
+        speedup_str = f"{r['speedup']:.2f}x" if r["speedup"] is not None else "N/A"
+
+        print(
+            f"{r['size']:<8} {r['abc_val']:<12} {r['abc_time']:.4f}s{'':<6} {bt_val_str:<12} {bt_time_str:<12} {acc_str:<12} {speedup_str}"
+        )
+
+    print(f"{'='*80}")
+
+    # Plot scaling behavior
+    plot_scaling_analysis(results)
+
+    return results
+
+
+def plot_scaling_analysis(results):
+    """Create visualization of scaling behavior"""
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    fig.suptitle(
+        "Analiză de Scalare: ABC vs Backtracking", fontsize=16, fontweight="bold"
+    )
+
+    sizes = [r["size"] for r in results]
+    abc_times = [r["abc_time"] for r in results]
+    bt_times = [r["bt_time"] for r in results if r["bt_time"] is not None]
+    bt_sizes = [r["size"] for r in results if r["bt_time"] is not None]
+
+    # 1. Time Scaling
+    ax1 = axes[0, 0]
+    ax1.plot(
+        sizes, abc_times, "o-", color="#2ecc71", linewidth=2, markersize=8, label="ABC"
+    )
+    if bt_times:
+        ax1.plot(
+            bt_sizes,
+            bt_times,
+            "s-",
+            color="#e74c3c",
+            linewidth=2,
+            markersize=8,
+            label="Backtracking",
+        )
+    ax1.set_xlabel(
+        "Dimensiunea Problemei (nr. obiecte)", fontweight="bold", fontsize=11
+    )
+    ax1.set_ylabel("Timp (secunde)", fontweight="bold", fontsize=11)
+    ax1.set_title(
+        "Timp de Execuție vs Dimensiunea Problemei", fontweight="bold", fontsize=12
+    )
+    ax1.legend()
+    ax1.grid(True, alpha=0.3)
+
+    # 2. Speedup
+    ax2 = axes[0, 1]
+    speedups = [r["speedup"] for r in results if r["speedup"] is not None]
+    speedup_sizes = [r["size"] for r in results if r["speedup"] is not None]
+    if speedups:
+        ax2.plot(
+            speedup_sizes, speedups, "o-", color="#9b59b6", linewidth=2, markersize=8
+        )
+        ax2.set_xlabel(
+            "Dimensiunea Problemei (nr. obiecte)", fontweight="bold", fontsize=11
+        )
+        ax2.set_ylabel(
+            "Factor de Accelerare (timp BT / timp ABC)", fontweight="bold", fontsize=11
+        )
+        ax2.set_title(
+            "Accelerarea ABC față de Backtracking", fontweight="bold", fontsize=12
+        )
+        ax2.grid(True, alpha=0.3)
+
+    # 3. Accuracy
+    ax3 = axes[1, 0]
+    accuracies = [r["accuracy"] for r in results if r["accuracy"] is not None]
+    acc_sizes = [r["size"] for r in results if r["accuracy"] is not None]
+    if accuracies:
+        ax3.plot(
+            acc_sizes, accuracies, "o-", color="#3498db", linewidth=2, markersize=8
+        )
+        ax3.axhline(y=100, color="red", linestyle="--", linewidth=1, label="Optim")
+        ax3.set_xlabel(
+            "Dimensiunea Problemei (nr. obiecte)", fontweight="bold", fontsize=11
+        )
+        ax3.set_ylabel("Acuratețe (%)", fontweight="bold", fontsize=11)
+        ax3.set_title("Calitatea Soluției ABC", fontweight="bold", fontsize=12)
+        ax3.set_ylim([90, 105])
+        ax3.legend()
+        ax3.grid(True, alpha=0.3)
+
+    # 4. Time Comparison (Log Scale)
+    ax4 = axes[1, 1]
+    ax4.semilogy(
+        sizes, abc_times, "o-", color="#2ecc71", linewidth=2, markersize=8, label="ABC"
+    )
+    if bt_times:
+        ax4.semilogy(
+            bt_sizes,
+            bt_times,
+            "s-",
+            color="#e74c3c",
+            linewidth=2,
+            markersize=8,
+            label="Backtracking",
+        )
+    ax4.set_xlabel(
+        "Dimensiunea Problemei (nr. obiecte)", fontweight="bold", fontsize=11
+    )
+    ax4.set_ylabel("Timp (secunde, scară logaritmică)", fontweight="bold", fontsize=11)
+    ax4.set_title("Scalare Timp (Logaritmic)", fontweight="bold", fontsize=12)
+    ax4.legend()
+    ax4.grid(True, alpha=0.3, which="both")
+
+    plt.tight_layout()
+    plt.savefig("knapsack_scaling_analysis.png", dpi=300, bbox_inches="tight")
+    print("\nScaling analysis graph saved as 'knapsack_scaling_analysis.png'")
+    plt.show()
+
+
 if __name__ == "__main__":
     random.seed(42)
 
-    print("\n" + "=" * 70)
-    print("KNAPSACK PROBLEM: ABC vs BACKTRACKING")
-    print("=" * 70)
-
-    # Example problem: (weight, value) for each item - LARGE INSTANCE
-    items = [
-        (10, 60),
-        (20, 100),
-        (30, 120),
-        (15, 70),
-        (25, 90),
-        (5, 30),
-        (12, 50),
-        (18, 80),
-        (22, 85),
-        (8, 45),
-        (14, 65),
-        (28, 110),
-        (16, 75),
-        (11, 55),
-        (19, 88),
-        (7, 40),
-        (24, 95),
-        (13, 60),
-        (21, 92),
-        (9, 48),
-        (17, 78),
-        (26, 105),
-        (6, 35),
-        (23, 98),
-        (27, 115),
-    ]
-    capacity = 150
-
-    print(f"\nProblem: {len(items)} items, capacity = {capacity}")
-    print("\nItems (weight, value):")
-    for i, (w, v) in enumerate(items, 1):
-        print(f"  Item {i}: weight={w}, value={v}")
-
-    # Solve with Artificial Bee Colony
-    abc_sol, abc_val, abc_time, convergence = abc_knapsack(
-        items, capacity, bees=20, iterations=50
-    )
-
-    # Solve with Backtracking (Exact)
-    bt_sol, bt_val, bt_time = backtracking_knapsack(items, capacity)
-
-    # Comparison
-    print("\n" + "=" * 70)
-    print("RESULTS COMPARISON")
-    print("=" * 70)
-    print(f"ABC (Metaheuristic):  Value = {abc_val}")
-    print(f"Backtracking (Exact): Value = {bt_val} (OPTIMAL)")
-    print(f"Difference: {abs(bt_val - abc_val)}")
-    if bt_val > 0:
-        print(f"ABC Accuracy: {(abc_val / bt_val * 100):.1f}%")
-
-    print("\n" + "=" * 70)
-    print("KEY INSIGHTS")
-    print("=" * 70)
-    print("• ABC is FAST but approximate (good for large problems)")
-    print("• Backtracking is EXACT but slower (guaranteed optimal)")
-    print("• Use ABC for 100+ items, Backtracking for < 30 items")
-    print("=" * 70)
-
-    # Generate analysis graphs
-    plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence)
+    # Run multi-size test
+    test_multiple_sizes()
