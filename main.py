@@ -208,13 +208,21 @@ def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history, size=
 
     # Add speedup annotation
     speedup = bt_time / abc_time if abc_time > 0 else 0
+    if speedup >= 1:
+        speedup_text = f"ABC este de {speedup:.2f}x mai rapid!"
+        box_color = "yellow"
+    else:
+        inverse_speedup = abc_time / bt_time if bt_time > 0 else 0
+        speedup_text = f"ABC este de {inverse_speedup:.2f}x mai lent!"
+        box_color = "lightcoral"
+
     ax1.text(
         0.5,
         max(times) * 0.5,
-        f"ABC este de {speedup:.1f}× mai rapid!",
+        speedup_text,
         ha="center",
         fontsize=11,
-        bbox=dict(boxstyle="round", facecolor="yellow", alpha=0.5),
+        bbox=dict(boxstyle="round", facecolor=box_color, alpha=0.5),
     )
 
     # 2. Value Comparison
@@ -281,6 +289,15 @@ def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history, size=
     ax4 = axes[1, 1]
     ax4.axis("off")
 
+    # Determine which algorithm is faster
+    if speedup >= 1:
+        speed_comparison = f"Raport Viteză: ABC este {speedup:.2f}x mai rapid"
+        time_percentage = f"ABC în doar {(abc_time/bt_time*100):.2f}% din timp!"
+    else:
+        inverse_speedup = abc_time / bt_time if bt_time > 0 else 0
+        speed_comparison = f"Raport Viteză: ABC este {inverse_speedup:.2f}x mai lent"
+        time_percentage = f"ABC ia {(abc_time/bt_time*100):.2f}% mai mult timp!"
+
     metrics_text = f"""
     METRICI DE PERFORMANȚĂ
     {'='*40}
@@ -296,13 +313,13 @@ def plot_analysis(abc_val, abc_time, bt_val, bt_time, convergence_history, size=
        • Tip: Algoritm Exact
     
     Comparație:
-       • Raport Viteză: {speedup:.2f}x mai rapid (ABC)
+       • {speed_comparison}
        • Acuratețe: {accuracy:.2f}%
        • Diferență Valoare: {gap}
     
     Concluzie:
        ABC a găsit o soluție {accuracy:.1f}% optimă
-       în doar {(abc_time/bt_time*100):.2f}% din timp!
+       {time_percentage}
     """
 
     ax4.text(
